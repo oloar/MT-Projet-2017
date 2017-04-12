@@ -89,6 +89,14 @@ let (busy_beaver: Turing_Machine.t -> Configuration.t) = fun bb ->
       let cfg = Configuration.make bb [ band ] in
         Execution.log_run cfg 
 
+let (parenthese: unit -> Configuration.t) = fun () ->
+      let alphabet = Alphabet.make [B;Z;U;O;C] in
+    let band1 = Band.make alphabet [O;Z;C;O;C] 
+    and band2 = Band.make alphabet []
+    and band3 = Band.make alphabet [] in
+      let cfg = Configuration.make Turing_Machine.parenthesage_bon [ band1 ; band2 ; band3] in
+        Execution.log_run cfg
+
 
 (* DEMO *)
             
@@ -105,6 +113,7 @@ let (demo: unit -> unit) = fun () ->
         gen_reverse () ;
         gen_swap () ;
         xor () ;
+        parenthese();
         busy_beaver Turing_Machine.bb4
            (* 
         * /!\  TERMINATING BUT EXTREMLY LONG COMPUTATIONS ... The sun will be dead before the end of BB6.

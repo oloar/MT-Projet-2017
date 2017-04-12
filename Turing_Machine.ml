@@ -351,37 +351,47 @@ module Turing_Machine =
 	   ]
 	  }
 
-	let (parenthesage_bon : symbols -> turing_machine)) =
-      let init = nop.initial and accept = nop.accept and reject = State.reject  in	          	  
+	let (parenthesage_bon : turing_machine) =
+      let init = nop.initial and accept = nop.accept and reject = State.reject in
+	      (* let ecrit_ce_quon_lit = Transition.foreach_symbol_of symbols (OUT [O; C])
+			    (fun s ->
+				  [ (Q 4, Action(Simultaneous[ RWM(Match(VAL s), No_Write, Right) ; RWM(Match(ANY), No_Write, Here); RWM(Match(VAL B), Write s, Right ) ] ), Q 4) ]
+			    ) 
+			in  *) 	  
 	  { nop with
 	    nb_bands = 3 ;
 	    name = "parenthesage_bon" ;
 	    transitions =
+	    (* ecrit_ce_quon_lit @  *)
 	    [
-	    	(init, Action(Simultaneous[ RWM(Match(VAL O), No_Write, Right) ; RWM(Match(VAL B), Write O, Here); RWM(Match(VAL B), No_Write, Here ) ] ), Q 1);
-	    	(init, Action(Simultaneous[ RWM(Match(BUT O), No_Write, Here) ; RWM(Match(ANY), No_Write, Here); RWM(Match(ANY), No_Write, Here ) ] ), reject);
+	    	(init, Action( Simultaneous [ RWM (Match(VAL O), No_Write, Right) ; RWM (Match(VAL B), Write O, Here); RWM (Match(VAL B), No_Write, Here ) ] ), Q 1);
+	    	(init, Action( Simultaneous [ RWM (Match(BUT O), No_Write, Here) ; RWM (Match(ANY), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), reject);
 
 
-	    	(Q 1, Action(Simultaneous[ RWM(Match(VAL L), No_Write, Right) ; RWM(Match(VAL O), No_Write, Here); RWM(Match(VAL B), No_Write, Here ) ] ), Q 2);
-	    	(Q 1, Action(Simultaneous[ RWM(Match(BUT L), No_Write, Here) ; RWM(Match(ANY), No_Write, Here); RWM(Match(ANY), No_Write, Here ) ] ), reject);
+	    	(Q 1, Action( Simultaneous [ RWM (Match(VAL L), No_Write, Right) ; RWM (Match(VAL O), No_Write, Here); RWM (Match(VAL B), No_Write, Here ) ] ), Q 2);
+	    	(Q 1, Action( Simultaneous [ RWM (Match(BUT L), No_Write, Here) ; RWM (Match(ANY), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), reject);
 
 
-	    	(Q 2, Action(Simultaneous[ RWM(Match(OUT[B;  O; C]), No_Write, Right) ; RWM(Match(ANY), No_Write, Here); RWM(Match(ANY), No_Write, Here ) ] ), Q 2);
-	    	(Q 2, Action(Simultaneous[ RWM(Match(VAL C), No_Write, Right) ; RWM(Match(VAL O), VAL B , Left); RWM(Match(VAL B),No_Write, Here ) ] ), Q 2);
-	    	(Q 2, Action(Simultaneous[ RWM(Match(VAL O), No_Write, Right) ; RWM(Match(VAL O), No_Write, Right); RWM(Match(VAL B), No_Write, Here ) ] ), Q 3);
-	    	(Q 2, Action(Simultaneous[ RWM(Match(BUT O), No_Write, Right) ; RWM(Match(VAL B), VAL O, Here); RWM(Match(ANY), No_Write, Here ) ] ), Q 4);
-	    	(Q 2, Action(Simultaneous[ RWM(Match(VAL C), No_Write, Here) ; RWM(Match(VAL B), No_Write, Here); RWM(Match(ANY), No_Write, Here ) ] ), reject);
-	    	(Q 2, Action(Simultaneous[ RWM(Match(VAL B), No_Write, Here) ; RWM(Match(VAL B), No_Write, Here); RWM(Match(ANY), No_Write, Here ) ] ), reject);
+	    	(Q 2, Action( Simultaneous [ RWM (Match(OUT [B;  O; C]), No_Write, Right) ; RWM (Match(ANY), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), Q 2);
+	    	(Q 2, Action( Simultaneous [ RWM (Match(VAL C), No_Write, Right) ; RWM (Match(VAL O), Write B , Left); RWM (Match(VAL B),No_Write, Here ) ] ), Q 2);
+	    	(Q 2, Action( Simultaneous [ RWM (Match(VAL O), No_Write, Right) ; RWM (Match(VAL O), No_Write, Right); RWM (Match(VAL B), No_Write, Here ) ] ), Q 3);
+	    	(Q 2, Action( Simultaneous [ RWM (Match(BUT O), No_Write, Right) ; RWM (Match(VAL B), Write O, Here); RWM (Match(ANY), No_Write, Here ) ] ), Q 4);
+	    	(Q 2, Action( Simultaneous [ RWM (Match(VAL C), No_Write, Here) ; RWM (Match(VAL B), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), reject);
+	    	(Q 2, Action( Simultaneous [ RWM (Match(VAL B), No_Write, Here) ; RWM (Match(VAL B), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), reject);
 
 	    	(*missing Q 4 *)
 	    	
+	    	(Q 3, Action( Simultaneous [ RWM (Match(ANY), No_Write, Here) ; RWM (Match(VAL B), Write O, Here); RWM (Match(VAL B), No_Write, Here ) ] ), Q 2);
 	    	
+	    	(Q 4, Action( Simultaneous [ RWM (Match(VAL B), No_Write, Here) ; RWM (Match(BUT B), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), reject);
+	    	(Q 4, Action( Simultaneous [ RWM (Match(VAL C), No_Write, Right) ; RWM (Match(VAL O), Write B, Left); RWM (Match(ANY), Write C, Right ) ] ), Q 4);
+	    	(Q 4, Action( Simultaneous [ RWM (Match(VAL O), No_Write, Right) ; RWM (Match(VAL O), No_Write, Right); RWM (Match(ANY), Write O, Right ) ] ), Q 5);
+	    	(Q 4, Action( Simultaneous [ RWM (Match(ANY), No_Write, Here) ; RWM (Match(VAL B), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), accept);
 
-	    	
 
-
-
+	    	(Q 5, Action( Simultaneous [ RWM (Match(ANY), No_Write, Here) ; RWM (Match(VAL B), Write O, Here); RWM (Match(VAL B), No_Write, Here ) ] ), Q 4);
 	    ]
+    }
 
 
 	    
