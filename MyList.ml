@@ -24,10 +24,10 @@ let rec map_fold_left acc op f = function
   | x::xs -> let acc' = op (f x) acc in map_fold_left acc' op f xs
 
 (* map_fold_left 0 (-) f [1;2;3] =  ((0 - (f 1)) - (f 2)) - (f 3) *)
-	
+  
 
 let forall_in: 't list -> ('t -> bool) -> bool = fun l p -> List.for_all p l
-	
+  
 let exists_in: 't list -> ('t -> bool) -> bool = fun l p -> List.exists p l 
 
 let (optional_find: ('t -> bool) -> 't list -> 't option) = fun p l ->
@@ -45,83 +45,83 @@ let (do_foreach_in: 't list -> ('t -> unit) -> unit) =
     let rec (iter_counter: int -> (int -> 't -> unit) -> 't list -> unit) = fun i action ts ->
       match ts with
       | [] -> ()
-      |	t::ts -> begin (action i t) ; iter_counter (i+1) action ts end
+      | t::ts -> begin (action i t) ; iter_counter (i+1) action ts end
 
     let rec (numbering_from: int -> 't list -> ('t * int) list) = 
       fun i -> function 
-	| [] -> []
-	| t::ts -> (t,i) :: (numbering_from (i+1) ts)
+  | [] -> []
+  | t::ts -> (t,i) :: (numbering_from (i+1) ts)
 
     let (minimum: int list -> int) = 
       function x::xs -> List.fold_left min x xs 
-	      
+        
     let (maximum: int list -> int) = 
       function x::xs -> List.fold_left max x xs 
-	      
+        
     let (prettys: string -> string -> string -> ('t -> string) -> 't list -> string) =
       fun deb sep fin pretty_elt elts -> 
-	    deb ^ (String.concat sep (List.map pretty_elt elts)) ^ fin
+      deb ^ (String.concat sep (List.map pretty_elt elts)) ^ fin
 
     let (pretty_list: ('t -> string) -> 't list -> string) = fun pp l ->
-	  prettys "[" ";" "]" pp l 
+    prettys "[" ";" "]" pp l 
 
 let disjunction  = List.exists (fun b -> b)
-	
+  
 let conjunction = List.for_all (fun b -> b)
-	
+  
 let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 
     let equal_with equal lx ly = 
       let rec equal_with_REC = function
-	| []   ,[]    -> true
-	| x::xs,y::ys -> if equal x y then equal_with_REC (xs,ys) else false
-	| _,_         -> false
+  | []   ,[]    -> true
+  | x::xs,y::ys -> if equal x y then equal_with_REC (xs,ys) else false
+  | _,_         -> false
       in equal_with_REC (lx,ly)
-	
+  
     let nieme i l = List.nth l (i-1)
 
     let first l = List.hd l
 
     let rec prefix = function
-      |	[] -> []
-      |	[e] -> []
-      |	e::es -> e::(prefix es)
+      | [] -> []
+      | [e] -> []
+      | e::es -> e::(prefix es)
 
     let safe_tl = function
-      |	[] -> []
-      |	_::xs -> xs
+      | [] -> []
+      | _::xs -> xs
 
     let last l = List.nth l ((List.length l)-1) 
 
     let extremity l =
       let rec extremity_rec (first,body) = function
-	| [ ]   -> (first, body, [ ])
-	| [e]   -> (first, body, [e])
-	| e::es -> extremity_rec (first, e::body) es
+  | [ ]   -> (first, body, [ ])
+  | [e]   -> (first, body, [e])
+  | e::es -> extremity_rec (first, e::body) es
       in 
-	let (first,body,last) = 
-	  if l = [] 
-	  then ([],[],[])
-	  else extremity_rec ([List.hd l], []) (List.tl l) 
+  let (first,body,last) = 
+    if l = [] 
+    then ([],[],[])
+    else extremity_rec ([List.hd l], []) (List.tl l) 
       in 
-	(first, List.rev body, last)
+  (first, List.rev body, last)
 
 
     let prolongate l e = l@[e]
 
     let rec remove_last = function
-      |	[]  -> []
-      |	[e] -> []
-      |	e::es -> e::(remove_last es)
+      | []  -> []
+      | [e] -> []
+      | e::es -> e::(remove_last es)
 
     let rassoc e l = List.assoc e (List.map (fun (x,y) -> (y,x)) l)
 
     let split_on_with equal elt l = 
       let rec split_on_with_rec (previous,next) = match next with
       | []    -> (previous,next)
-      |	x::xs -> 
-	      if equal x elt then (previous,xs) 
-	      else split_on_with_rec (previous@[x],xs)
+      | x::xs -> 
+        if equal x elt then (previous,xs) 
+        else split_on_with_rec (previous@[x],xs)
       in split_on_with_rec ([],l)
 
     let split_on elt l = split_on_with (=) elt l
@@ -137,9 +137,9 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
     let split_after_with equal elt l =
       let rec split_after_with_rec (previous,next) = match next with
       | []    -> (previous,next)
-      |	x::xs -> 
-	      if equal x elt then (previous@[x],xs) 
-	      else split_after_with_rec (previous@[x],xs)
+      | x::xs -> 
+        if equal x elt then (previous@[x],xs) 
+        else split_after_with_rec (previous@[x],xs)
       in split_after_with_rec ([],l)
 
     let split_after elt l = split_after_with (=) elt l
@@ -155,25 +155,25 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 
     let split_at n l =
       let rec split_at_REC n (first,tail) = 
-	if (n=0) 
-	then (first,tail)
-	else 
-	  match tail with
-	  | []    -> ([],l)
-	  | x::xs -> split_at_REC (n-1) (first@[x],xs)
+  if (n=0) 
+  then (first,tail)
+  else 
+    match tail with
+    | []    -> ([],l)
+    | x::xs -> split_at_REC (n-1) (first@[x],xs)
       in if (n<=0) then ([],l) else split_at_REC n ([],l)
 
 
     let decomp_along l sizeS = 
       let rec decomp_alongR acc l = function 
-	| []    -> acc @ [l]
-	| n::ns -> 
-		if l=[] then acc
-		else
-		  let (n_first, tail) = split_at n l
-		  in decomp_alongR (acc @ [n_first]) tail ns
+  | []    -> acc @ [l]
+  | n::ns -> 
+    if l=[] then acc
+    else
+      let (n_first, tail) = split_at n l
+      in decomp_alongR (acc @ [n_first]) tail ns
       in
-	decomp_alongR [] l sizeS
+  decomp_alongR [] l sizeS
 
 
     let decomp_in_pieces l n = (* euclide *)
@@ -184,8 +184,8 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 
 
     let rec separate_by sep = function
-      |	[] -> []
-      |	e::es -> e::sep::(separate_by sep es)
+      | [] -> []
+      | e::es -> e::sep::(separate_by sep es)
 
     let surround_by s = function
       | [] -> []
@@ -193,12 +193,12 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 
     let sliced_by symb l = 
       surround_by symb
-	(separate_by symb l)
+  (separate_by symb l)
 
     let rec is_prefix_of l1 l2 = match l1,l2 with
-      |	[ ], _  -> true
-      |	 _ ,[ ] -> false
-      |	x::xs, y::ys -> if x=y then is_prefix_of xs ys else false
+      | [ ], _  -> true
+      |  _ ,[ ] -> false
+      | x::xs, y::ys -> if x=y then is_prefix_of xs ys else false
 
     (* TEST
      * prefix_of [1;2;3] [1;2;3;4;5] ;; = true
@@ -213,80 +213,80 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
       | ([],_) 
       | (_,[]) -> []
       | (x::xs,y::ys)   -> (x,y)::(zip xs ys)
-		
+    
     let zip_status lx ly =
       let rec zipR lxy = function
-	| []   , []   -> true, List.rev lxy
-	| []   , _ 
-	| _    , []   -> false,[]
-	| x::xs,y::ys -> zipR ((x,y)::lxy) (xs,ys)
+  | []   , []   -> true, List.rev lxy
+  | []   , _ 
+  | _    , []   -> false,[]
+  | x::xs,y::ys -> zipR ((x,y)::lxy) (xs,ys)
       in zipR [] (lx,ly)
 
     let zipWith op l1 l2 =
       List.map 
-	(fun (x,y) -> op x y)  
-	(zip l1 l2)
-	
-	
+  (fun (x,y) -> op x y)  
+  (zip l1 l2)
+  
+  
     let unzip lxy =
       List.fold_right
-	(fun (x,y) (xs_acc,ys_acc) -> (x::xs_acc,y::ys_acc))
-	lxy
-	([],[])
-	
+  (fun (x,y) (xs_acc,ys_acc) -> (x::xs_acc,y::ys_acc))
+  lxy
+  ([],[])
+  
     (* EXAMPLES
        let l = zip [1;3;5;7] [2;4;6;8] ;; =  [(1, 2); (3, 4); (5, 6); (7, 8)]
        unzip l ;;                         = ([1;3;5;7],[2;4;6;8])
 
        let l = zip [[1];[3];[5]] [[2];[4];[6]] ;; = [([1], [2]); ([3], [4]); ([5], [6])]
        unzip l ;; =  ([[1]; [3]; [5]], [[2]; [4]; [6]])
-     *)	
+     *) 
 
 (*
     let rec verbose_zip lx ly = 
       let (+) c = function 
-	| Succ_Fail.Succ(xs)  -> Succ_Fail.Succ(c::xs)
-	| Succ_Fail.Fail(err) -> Succ_Fail.Fail(err)
+  | Succ_Fail.Succ(xs)  -> Succ_Fail.Succ(c::xs)
+  | Succ_Fail.Fail(err) -> Succ_Fail.Fail(err)
       in
       match (lx,ly) with   
       | ([],[])       -> Succ_Fail.Succ([])
       | ([],_)        -> Succ_Fail.Fail((lx,ly))
       | (_,[])        -> Succ_Fail.Fail((lx,ly))
       | (x::xs,y::ys) -> (x,y) + (verbose_zip xs ys)
-*)	    
-	   
+*)      
+     
     let gather  (split_wrt: 'a list -> 'a -> 'a list *'a list) l = 
       let rec gatherH acc l =
-	match l with
-	| []   -> acc
-	| x::_ -> 
-	    let (x_like, others) = split_wrt l x 
-	    in gatherH (x_like::acc) others
+  match l with
+  | []   -> acc
+  | x::_ -> 
+      let (x_like, others) = split_wrt l x 
+      in gatherH (x_like::acc) others
       in
       gatherH [] l
-	
-	
+  
+  
     let gather_equivalent equiv l = 
       let split_wrt l x = List.partition (fun y -> equiv x y) l
       in
-	gather split_wrt l
+  gather split_wrt l
 
 
     let factorize_wrt split_key_data  elts = 
       let key  e = fst (split_key_data e)
       and data e = snd (split_key_data e) 
       in
-	match elts with
-	| []    -> []
-	| e::es -> [ (key e, List.map data elts) ]
-	
+  match elts with
+  | []    -> []
+  | e::es -> [ (key e, List.map data elts) ]
+  
 
     let filter_with l p = List.filter p l 
 
 
     let sum_from_with zero f = function
-      |	[]    -> zero
-      |	x::xs -> List.fold_left f x xs	
+      | []    -> zero
+      | x::xs -> List.fold_left f x xs  
 
     let sum_with f l = List.fold_left f (List.hd l) (List.tl l)
      
@@ -313,8 +313,8 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
       forEachIn l (fun e acc -> (f e)@acc) []
 
     let rec mapAndConcat f = function 
-      |	[] -> []
-      |	x::xs -> (f x) @ (mapAndConcat f xs)
+      | [] -> []
+      | x::xs -> (f x) @ (mapAndConcat f xs)
 
 
     let product_with f l1 l2 = forEach l1 (fun e1 -> List.map (fun e2 -> (f e1 e2)) l2)
@@ -324,18 +324,18 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 
     let select_one_elt l = 
       let rec f acc took = function
-	| []        -> acc
-	| e::others -> f ((e,took@others)::acc)  (e::took)  others
+  | []        -> acc
+  | e::others -> f ((e,took@others)::acc)  (e::took)  others
       in
-	f [] [] l
+  f [] [] l
 
 
     let combination_of_size_without_repetition n elts = (* FIXME: PERMUTATION ? STRANGE ? OR UNNECESSARILY COMPLEX ? *)
       let rec f  n  comb_acc  unused_elts =
-	if (n=0) || (unused_elts=[])
-	then [comb_acc]
-	else forEach (select_one_elt unused_elts) 
-	      (fun (e,others) -> f (n-1) (e::comb_acc) others)
+  if (n=0) || (unused_elts=[])
+  then [comb_acc]
+  else forEach (select_one_elt unused_elts) 
+        (fun (e,others) -> f (n-1) (e::comb_acc) others)
       in f n [] elts
 
 
@@ -357,13 +357,13 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 
     let subsets_of_size n l =
       let rec spread_out n elts l =
-	if (n=0) 
-	then [l]
-	else match elts with
-	| []    -> []
-	| e::es -> (spread_out (n-1) es (e::l)) @ (spread_out n es l)
+  if (n=0) 
+  then [l]
+  else match elts with
+  | []    -> []
+  | e::es -> (spread_out (n-1) es (e::l)) @ (spread_out n es l)
       in
-	spread_out n l []
+  spread_out n l []
 
 
     let rec shareout l ll =
@@ -377,128 +377,128 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 
     let apply f (env,la) = 
       let (env',lb) = 
-	List.fold_left  
-	  (fun (env,lb) a -> let (env',b) = f env a in (env', b::lb)) 
-	  (env,[])  
-	  la
+  List.fold_left  
+    (fun (env,lb) a -> let (env',b) = f env a in (env', b::lb)) 
+    (env,[])  
+    la
       in (env',List.rev lb)
 
 
     let map_right f l = (* its evaluation order is the reversed of those of map ; starts by the end *)
       l |> List.rev |> (List.map f) |> List.rev
-		
+    
     let map_on l f = List.map f l
-	    
+      
     let distribute_on e xs = List.map (fun x -> (e,x)) xs
 
     let distribute_fst l = mapAndConcat (fun (e,xs) -> distribute_on e xs) l
-			
+      
 
     let replace_by_in oldV newV l = (* NAIVE VERSION *)
-	let rec f beg mid tail old = 
-	  match (old, tail) with
-	    [],[] -> beg @ newV
-	  |
-	    _ ,[] -> beg @ mid
-			     
-	  |
-	    [],_    -> f (beg @ newV)           []        tail  oldV
-	  | 
-	    o::os, x::xs -> 
-		  let mid = mid@[x]
-		  in let h = List.hd mid
-		  in let t = List.tl mid
-		  in
-		    if o=x 
-		    then f beg        mid   xs        os
-		    else f (beg@[h])  []    (t @ xs)  oldV
-	in
-	  f [] [] l oldV
+  let rec f beg mid tail old = 
+    match (old, tail) with
+      [],[] -> beg @ newV
+    |
+      _ ,[] -> beg @ mid
+           
+    |
+      [],_    -> f (beg @ newV)           []        tail  oldV
+    | 
+      o::os, x::xs -> 
+      let mid = mid@[x]
+      in let h = List.hd mid
+      in let t = List.tl mid
+      in
+        if o=x 
+        then f beg        mid   xs        os
+        else f (beg@[h])  []    (t @ xs)  oldV
+  in
+    f [] [] l oldV
 
 
     let mapfold2 default m f l = 
       match l with 
       | []    -> default
       | x::xs -> List.fold_left (fun x y -> f x (m y)) (m x) xs
-	    
-	  
+      
+    
     let make n elt = iterate n (fun acc -> elt::acc) []
-	
-	
+  
+  
     let rec fold_until stop_when f acc = function
       | []    -> acc
       | x::xs -> 
-	  if (stop_when x acc)  
-	  then (f x acc)  
-	  else (fold_until stop_when f (f x acc) xs)
+    if (stop_when x acc)  
+    then (f x acc)  
+    else (fold_until stop_when f (f x acc) xs)
 
-(*			
+(*      
     let rec try_until_success f = function 
       | []    -> SUCCESS_FAILURE.FAILURE
       | x::xs -> 
-	      (match f x with 
-	      | SUCCESS_FAILURE.FAILURE -> try_until_success f xs
-	      | success        -> success
-	      )
-	
+        (match f x with 
+        | SUCCESS_FAILURE.FAILURE -> try_until_success f xs
+        | success        -> success
+        )
+  
     let compare_with  compare_elt lx ly =
       match  verbose_zip lx ly with
       | Succ_Fail.Fail([],_) -> -1
       | Succ_Fail.Fail(_,[]) ->  1
       | Succ_Fail.Succ(lxy)  -> 
-	  fold_until (fun c acc -> (c!=0))
-	    (fun c acc -> c)
-	    0
-	    (List.map (function (x,y) -> compare_elt x y) lxy)
-	    
+    fold_until (fun c acc -> (c!=0))
+      (fun c acc -> c)
+      0
+      (List.map (function (x,y) -> compare_elt x y) lxy)
+      
       |  _  -> _INCOMPARABLE (*  for completness of the matching ; never happens. That constant is defined in common.ml *)
-	    
+      
  *)
-	      
+        
     let extremum inf l = 
       List.fold_left 
-	(function min -> function elt -> if (inf min elt) then min else elt)
-	(List.hd l)
-	(List.tl l)
+  (function min -> function elt -> if (inf min elt) then min else elt)
+  (List.hd l)
+  (List.tl l)
   
     let extremum_of inf l =
       List.fold_left 
-	(function (x,l) -> function y -> if (inf x y) then (x,y::l) else (y,x::l))
-	(List.hd l,[]) 
-	(List.tl l)  
-	
+  (function (x,l) -> function y -> if (inf x y) then (x,y::l) else (y,x::l))
+  (List.hd l,[]) 
+  (List.tl l)  
+  
     let max_of f l = extremum (<) (List.map f l)
 
     let rec take_sublist emin emax l =
       if (emin>1)
       then 
-	match l with 
-	| []    -> []
-	| x::xs -> take_sublist (emin-1) (emax-1) xs
+  match l with 
+  | []    -> []
+  | x::xs -> take_sublist (emin-1) (emax-1) xs
       else (* emin=1 *)
-	if (emax>=1)
-	then
-	  match l with
-	  | []    -> []
-	  | x::xs -> x::(take_sublist emin (emax-1) xs)
-	else (* emin=1, emax=0 *)
-	  []
-	    
-	    
+  if (emax>=1)
+  then
+    match l with
+    | []    -> []
+    | x::xs -> x::(take_sublist emin (emax-1) xs)
+  else (* emin=1, emax=0 *)
+    []
+      
+      
     let transpose ll = 
       List.fold_right (fun l llacc -> distrib l llacc) ll [] 
-	
-		
+  
+    
     let pretty_generic  begSymb  separator  endSymb  pretty_elt l = 
       begSymb ^ (String.concat separator (List.map pretty_elt l)) ^ endSymb
 
     let separate_with begSymb separator endSymb pretty_elt l = 
       let str = pretty_generic "" separator "" pretty_elt l in
-	if str = "" 
-	then ""
-	else begSymb ^ str ^ endSymb 
+  if str = "" 
+  then ""
+  else begSymb ^ str ^ endSymb 
 
-			  
+        
     let pretty_compact pretty_elt = pretty_generic "[" "; " "]" pretty_elt 
 
     let pretty       pretty_elt = pretty_generic "\n[ " "\n; " "\n]\n" pretty_elt 
@@ -509,16 +509,16 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 (* ALL THE FOLLOWING FUNCTION CORRESPONDS TO SETs operations !!! *)
 
     let rec member_with equal e = function
-      |	[]                     -> false
-      |	x::xs when (equal e x) -> true
-      |	x::xs                  -> member_with equal e xs
+      | []                     -> false
+      | x::xs when (equal e x) -> true
+      | x::xs                  -> member_with equal e xs
 
     let rec add_merge_with merge when_equal e' = function 
-      |	[] -> [e']
-      |	e::es ->     
-	      if (when_equal e' e) 
-	      then (merge e' e)::es
-	      else e::(add_merge_with merge when_equal e' es)
+      | [] -> [e']
+      | e::es ->     
+        if (when_equal e' e) 
+        then (merge e' e)::es
+        else e::(add_merge_with merge when_equal e' es)
 
 
     let add_with equal e l = if member_with equal e l then l else e::l 
@@ -550,7 +550,7 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 
     let bigUnion l = concat_with union [] l ;;
 
-(*	
+(*  
     let star_fixpoint  (op_elt:'t -> 't list) (initial_elts:'t list) : 't list = 
       Hof.fixpoint subseteq union minus op_elt initial_elts
 *)
@@ -558,33 +558,33 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 (* USEFUL FUNCTIONS ON LIST *)
 
     let minmax error_value opMinMax = function 
-      |	[]        -> error_value
-      |	first::xs -> List.fold_left (fun acc e -> opMinMax acc e) first xs
+      | []        -> error_value
+      | first::xs -> List.fold_left (fun acc e -> opMinMax acc e) first xs
 
 
     let mergeWith p plus zero l =
       let (p_like,others) = List.partition (fun e -> p e) l
       in
       (concat_with plus zero p_like) :: others
-	
+  
 
     let get_one pred lref =
       let cons x (lp,l) = (lp,x::l)
       in
-	let rec get_one_rec = function
-	  | []    -> ([],[])
-	  | x::xs -> 
-		  if (pred x) 
-		  then ([x],xs)
+  let rec get_one_rec = function
+    | []    -> ([],[])
+    | x::xs -> 
+      if (pred x) 
+      then ([x],xs)
                   else (cons x (get_one_rec xs))
-	in 
-	  let 
-	    (lp,l)= get_one_rec !lref
-	  in
-	    begin
-	      lref:=l; 
-	      lp 
-	    end
+  in 
+    let 
+      (lp,l)= get_one_rec !lref
+    in
+      begin
+        lref:=l; 
+        lp 
+      end
 
     (* EXAMPLES
      * let lr = ref [1;2;3;4;5];;
@@ -595,10 +595,10 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
     let filter_elim pred lref =
       let (lpred,others)= List.partition pred !lref
       in 
-	begin
-	  lref:=others; 
-	  lpred 
-	end
+  begin
+    lref:=others; 
+    lpred 
+  end
 
     (* EXAMPLES
      * let lr = ref [1;2;3;4;5] ;;
@@ -609,20 +609,20 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
     let member_with_elim equal e lref =
       let cons x (b,l) = (b,x::l)
       in
-	let rec member_with_elim_rec = function
-	  | []    -> (false,[])
-	  | x::xs -> 
-		  if (equal e x) 
-		  then (true,xs)
+  let rec member_with_elim_rec = function
+    | []    -> (false,[])
+    | x::xs -> 
+      if (equal e x) 
+      then (true,xs)
                   else (cons x (member_with_elim_rec xs))
-	in 
-	  let 
-	    (b,l)= member_with_elim_rec !lref
-	  in
-	    begin
-	      lref:=l; 
-	      b 
-	    end
+  in 
+    let 
+      (b,l)= member_with_elim_rec !lref
+    in
+      begin
+        lref:=l; 
+        b 
+      end
 
     (* EXAMPLES
      *
@@ -639,42 +639,42 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
     let rec number_with annotate_with step n = function
       | []    -> []
       | x::xs -> (annotate_with n x)::(number_with annotate_with step (step n x) xs)
-					
+          
     let number_from n l = number_with (fun n x -> (n,x)) (fun n x -> (n+1)) n l
 
     let rang_with_update equal e lRef =
       let rec rangRec i e = function
-	| x::xs -> if equal x e then i else rangRec (i+1) e xs
-	| []    -> begin lRef:=!lRef@[e] ; i end
+  | x::xs -> if equal x e then i else rangRec (i+1) e xs
+  | []    -> begin lRef:=!lRef@[e] ; i end
       in rangRec 0 e !lRef
 
     let rang e l = 
       let rec rangRec i = function
-	| []    -> -1
-	| x::xs -> if x=e then i else rangRec (i+1) xs
+  | []    -> -1
+  | x::xs -> if x=e then i else rangRec (i+1) xs
       in rangRec 0 l
 
 
     let assoc_update_with f e lRef =
       try
-	List.assoc e (!lRef) 
+  List.assoc e (!lRef) 
       with
-	Not_found ->  
-	      let a = f e (!lRef) in
-		begin
-		  lRef:= (e,a)::(!lRef) ; 
-		  a 
-		end
+  Not_found ->  
+        let a = f e (!lRef) in
+    begin
+      lRef:= (e,a)::(!lRef) ; 
+      a 
+    end
 
     let collect f l = remove_duplicates (List.map f l)
 
-    (* compact [a;b;b;a;c] = [ (2,a) ; (2,b) ; (1,c) ] *)	
+    (* compact [a;b;b;a;c] = [ (2,a) ; (2,b) ; (1,c) ] *) 
     let rec compact = function
-      |	[] -> []
-      |	x::l -> 
-	      let (xs,os) = List.partition ((=) x) l
-	      in let nbx = 1 + List.length xs
-	      in (nbx,x)::(compact os)
+      | [] -> []
+      | x::l -> 
+        let (xs,os) = List.partition ((=) x) l
+        in let nbx = 1 + List.length xs
+        in (nbx,x)::(compact os)
       
 (* 
    intersection and minus are set opertions,
@@ -682,25 +682,25 @@ let bool_op op l = List.fold_right (fun b acc -> op b acc) l (op true false)
 *)
 
     let rec remove_one e = function
-      |	[] -> []
-      |	x::xs when e=x -> xs
-      |	x::xs -> x::(remove_one e xs) 
+      | [] -> []
+      | x::xs when e=x -> xs
+      | x::xs -> x::(remove_one e xs) 
 
-(*		      
+(*          
     let get e l =
       let rec getR acc = function
-	| [] -> Succ_Fail.Fail(e)
-	| x::xs -> if (e=x) then Succ_Fail.Succ (e, (List.rev acc)@xs) else getR (x::acc) xs
+  | [] -> Succ_Fail.Fail(e)
+  | x::xs -> if (e=x) then Succ_Fail.Succ (e, (List.rev acc)@xs) else getR (x::acc) xs
       in
-	getR [] l 
+  getR [] l 
 
     let rec common lx ly = 
       match lx with
-      |	[] -> []
-      |	x::xs -> 
-	      match get x ly with 
-	      | Succ_Fail.Fail(x) -> common xs ly
-	      |	Succ_Fail.Succ(x,ys) -> x::(common xs ys)
+      | [] -> []
+      | x::xs -> 
+        match get x ly with 
+        | Succ_Fail.Fail(x) -> common xs ly
+        | Succ_Fail.Succ(x,ys) -> x::(common xs ys)
 
 let rec diff lx ly =
   match lx with
@@ -727,7 +727,7 @@ let rec is_sublist_of lx ly =
    Ext.LIST.make 5 "a" ;;
 
    *** ZIP/UNZIP ***
-	
+  
    Ext.LIST.verbose_zip [1;2;3;4;5] ["a1";"a2";"a3";"a4";"a5";"a6";"a7"] ;;
    Ext.LIST.verbose_zip [1;2;3;4;5] ["a1";"a2";"a3";"a4";"a5"] ;;
    Ext.LIST.verbose_zip [1;2;3;4;5] ["a1";"a2";"a3"] ;;

@@ -20,13 +20,13 @@
   
 class counter = fun (initial_value:int) ->
       object
-	val mutable counter: int = (initial_value - 1)
-	    
-	method next: int = 
-	  begin
-	    counter <- counter + 1 ;
-	    counter
-	  end
+    val mutable counter: int = (initial_value - 1)
+        
+    method next: int = 
+      begin
+        counter <- counter + 1 ;
+        counter
+      end
       end
     
 

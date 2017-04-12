@@ -1,6 +1,6 @@
 (* Michaël PÉRIN, Verimag / Université Grenoble-Alpes, Février 2017 
  *
- * A library for generating html output	
+ * A library for generating html output 
  *
  * - Required modules: Tricks MyList Graphics -> Color
  *
@@ -22,7 +22,7 @@ type valeur =
   | Int of int
   | Option of string
   | Color of Color.t
-	      
+        
 type options = (string * valeur) list
 
 (* UNUSED ? USEFUL ?
@@ -60,7 +60,7 @@ let (valeur_to_string: valeur -> string) = fun valeur ->
 
 
 (* OPTIONS:  algin=center  color="red" *)
-		
+    
 let (process_options: options -> string) = fun options ->
   if options = []
   then ""
@@ -72,18 +72,18 @@ let (process_options: options -> string) = fun options ->
     in " " ^ string
 
 
-(* ENVIRONMENT: <TAG options> content </TAG> *)	       
+(* ENVIRONMENT: <TAG options> content </TAG> *)        
 
 let (environment: string * string * string -> options -> content -> content) = fun (before_mark,mark,after_mark) options content ->
-	String.concat "" [ before_mark ; "<" ^ mark ^ (process_options options) ^ ">" ; after_mark ;
-			   content ; after_mark ;
-			   before_mark ; "</" ^ mark ^ ">" ; after_mark ]
+  String.concat "" [ before_mark ; "<" ^ mark ^ (process_options options) ^ ">" ; after_mark ;
+         content ; after_mark ;
+         before_mark ; "</" ^ mark ^ ">" ; after_mark ]
 
 
 (* TABLE *)
-	
+  
 (* table cell: <TD option> content </TD> *)
-	
+  
 let (cell: options -> content -> cell) = environment ("  ","TD","")
     
 let (wide_cell: int -> int -> cell) = fun width n ->
@@ -97,12 +97,12 @@ let (old_wide_cell: int -> int -> cell) = fun width n ->
       else ""
 
 (* table: <TABLE option> rows </TABLE> *)
-	  
+    
 let (table: options -> rows -> table) = fun options rows ->
       environment ("","TABLE","\n") options (concat rows)
 
 (* table row: <TR option> cells </TR> *)
-	
+  
 let (row: options -> cell list -> row) = fun options cells ->
       environment (" ","TR","\n") options (concat cells)
 
@@ -110,21 +110,21 @@ let (row: options -> cell list -> row) = fun options cells ->
 
 let (column: options -> cell list -> table) = fun options cells ->
       let
-	  (one_cell_row:cell -> row) = fun cell -> row [] [cell] 
+    (one_cell_row:cell -> row) = fun cell -> row [] [cell] 
       in
-	table options (List.map one_cell_row cells)
+  table options (List.map one_cell_row cells)
 
 (* tuple = a table of one row inside a cell *)
-	  
+    
 let (tuple: options -> cell list -> cell) = fun options cells ->
       cell options
-	(table [ ("border", Int 1) ] 
-	   [row [] cells]
-	)
-	
-	
-(* FONT *)	  
-	  
+  (table [ ("border", Int 1) ] 
+     [row [] cells]
+  )
+  
+  
+(* FONT *)    
+    
 let (font: options -> content -> content)  = environment ("","FONT","")
 
 let (italic: content -> content) = environment ("","I","") []

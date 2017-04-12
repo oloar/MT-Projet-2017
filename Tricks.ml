@@ -22,14 +22,13 @@ let (>>) = pipe ;;
    let _ = 1 >> ((+) 1) >> ((/) 2) >> ((+) 3) ;; 
  *)
 
-   
 (* TRICK 2. the function composition but in the sequential order (not the mathematical one)
  * - It can be done using >> 
  *)
 
 let (sequential_composition: ('a -> 'b) -> ('b -> 'c) -> ('a -> 'c)) = fun f g ->
-      (fun a -> g (f a)) 
-      
+      (fun a -> g (f a))
+
 let (-->) = sequential_composition ;;
 
 (* Example: 
@@ -40,17 +39,17 @@ let _ =  let op x = fun x -> x >> ((+) 1) >> ((/) 2) >> ((+) 3)
          in op 1 ;;
 *)
 
-   
+
 (* TRICK 3. Cast to unit *)
-    
+
 let (unit: 'a -> unit) = fun _ -> () 
 
 (* Example: 
    let (inc: int -> int) = fun i ->
-	 begin
-	   print_string (string_of_int i) ;
-	   i+1
-	 end
+   begin
+     print_string (string_of_int i) ;
+     i+1
+   end
    in
      begin
        unit(inc 0) ; 

@@ -19,3 +19,7 @@ _build/
 # oasis generated files
 setup.data
 setup.log
+
+# Perso
+run
+notes

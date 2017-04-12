@@ -36,16 +36,16 @@ module Alphabet =
     let (empty: alphabet) = { symbols = [B] ; symbol_size_in_bits = 1 } 
 
     let (make: symbols -> alphabet) = fun symbols ->
-	  let symbols = MyList.union [B] symbols 
-	  in
-	    { symbols = symbols ;
-	      symbol_size_in_bits = Bits.nb_bits_for (List.length symbols)
-	    }
+    let symbols = MyList.union [B] symbols 
+    in
+      { symbols = symbols ;
+        symbol_size_in_bits = Bits.nb_bits_for (List.length symbols)
+      }
 
     let (binary: alphabet) = make [Bit.zero ; Bit.unit]
 
     let (full: alphabet) = make [D;U;Z;S;L;O;C;X]
-	
+  
   end)
 
 

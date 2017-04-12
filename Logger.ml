@@ -32,12 +32,12 @@ module Indent =
   (struct
     
     let _INDENTATION_ = ref 0
-	
+    
     let (incr: unit -> unit) = fun () -> _INDENTATION_ := (!_INDENTATION_) + 2
-    let (decr: unit -> unit) = fun () -> _INDENTATION_ := (!_INDENTATION_) - 2	
-	
+    let (decr: unit -> unit) = fun () -> _INDENTATION_ := (!_INDENTATION_) - 2  
+    
     let (newline: string -> string) = fun string ->
-	  String.concat "" ["\n" ; String.make (!_INDENTATION_) ' ' ; string ]
+      String.concat "" ["\n" ; String.make (!_INDENTATION_) ' ' ; string ]
   end)
     
 
@@ -49,38 +49,38 @@ module Indent =
 class logger = fun (opt_name: string option) ->
       object(self)
 
-	val opt_filename: string option =
-	  match opt_name with
-	  | None -> None
-	  | Some name ->
-		  let path = "_log"
-		  in  Some (String.concat "/"  [ path ; name ]) 
+    val opt_filename: string option =
+      match opt_name with
+      | None -> None
+      | Some name ->
+          let path = "_log"
+          in  Some (String.concat "/"  [ path ; name ]) 
 
-	val mutable channel: out_channel = stdout
+    val mutable channel: out_channel = stdout
 
-	initializer
-	  channel <-
-	    (match opt_filename with
-	    | None -> stdout
-	    | Some filename -> open_out filename
-	    )
+    initializer
+      channel <-
+        (match opt_filename with
+        | None -> stdout
+        | Some filename -> open_out filename
+        )
 
-	method print: string -> unit = fun string ->
-	      output_string channel string
-		  
-	method newline: string -> unit = fun string -> self#print (Indent.newline string)
-		
-	method print_msg: string -> unit = fun string ->
-	      print_string string 
+    method print: string -> unit = fun string ->
+          output_string channel string
+          
+    method newline: string -> unit = fun string -> self#print (Indent.newline string)
+        
+    method print_msg: string -> unit = fun string ->
+          print_string string 
 
-	method close: unit =
-	  begin
-	    (match opt_filename with
-	    | None -> ()
-	    | Some filename -> self#print_msg ("\n\n.... data logged in: " ^ filename ^ "\n")
-	    ) ;
-	    close_out channel
-	  end
+    method close: unit =
+      begin
+        (match opt_filename with
+        | None -> ()
+        | Some filename -> self#print_msg ("\n\n.... data logged in: " ^ filename ^ "\n")
+        ) ;
+        close_out channel
+      end
 
       end
 

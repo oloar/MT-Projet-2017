@@ -21,16 +21,16 @@ let (bind: ('a -> 'b m) -> 'a m -> 'b m) = fun fopt option ->
       match option with
       | None -> None
       | Some a -> fopt a
-		
+            
 let (map: ('a -> 'b) -> 'a m -> 'b m) = fun f ->
       bind (fun a -> Some (f a))
-	
-	
+      
+      
 let (filter: ('a -> bool) -> 'a m -> 'a m) = fun pred option ->
       match option with
       | Some a when (pred a) -> Some a
       | _ -> None
-		
+            
 let (to_list:'a m -> 'a list) = fun option ->
       match option with
       | None -> []

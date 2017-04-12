@@ -48,9 +48,9 @@ let output_in ~(filename:string) ~(content:string) : unit =
     end
 
 
-	  
+
 (* INFORMATION *)
-    
+
 let extension: format -> string = fun format ->
       match format with
       | Latex -> "tex"
@@ -62,10 +62,10 @@ let (get_format: unit -> format) = fun () -> !_format_ ;;
 
 let get_extension ?format:(format=(!_format_)) : unit -> string = fun () ->
       let ext = extension format in
-	if ext = "" then ext else "."^ext
+  if ext = "" then ext else "."^ext
 
-      
-    
+
+
 (* SETTINGS *)
 
 let (set_format: format -> unit) = fun format ->
@@ -75,25 +75,25 @@ let (set_format: format -> unit) = fun format ->
 (** local settings *)
 
 open Tricks
-  
+
 let show ?format:(format=(!_format_)) : ('a delayed_computation) -> 'a = fun delayed_computation ->
       if format = !_format_
       then delayed_computation () 
       else
-	let current_format = (!_format_) in
-	  begin
-	    set_format format ;
-	    let result = delayed_computation () in
-	      begin
- 		set_format current_format ; 
-		result 
-	      end
-	  end
+  let current_format = (!_format_) in
+    begin
+      set_format format ;
+      let result = delayed_computation () in
+        begin
+    set_format current_format ; 
+    result 
+        end
+    end
 
 let print ?format:(format=(!_format_)) : string delayed_computation -> unit = fun delayed_computation ->
       show ~format:format (fun unit -> print_string (delayed_computation unit))
 
-	
+
 (* ESCAPE STRING *)
 
 let (string_in_string: string -> string) = STRING.string_in_string ;;
@@ -101,30 +101,30 @@ let (string_in_string: string -> string) = STRING.string_in_string ;;
 let (make_string: int -> string -> string) = STRING.make ;;
 
 
-    
+
 (* ASCII FONTS & COLORS *)
-    
+
 let (ascii_black: string -> string) = fun string ->
-       "\x1B[1;30m" ^ string ^ "\x1B[0m" 	
+       "\x1B[1;30m" ^ string ^ "\x1B[0m"  
 
 let (ascii_red: string -> string) = fun string ->
       "\x1B[1;31m" ^ string ^ "\x1B[0m" 
 
 let (ascii_green: string -> string) = fun string ->
-       "\x1B[1;32m" ^ string ^ "\x1B[0m" 	
-				
+       "\x1B[1;32m" ^ string ^ "\x1B[0m"  
+
 let (ascii_yellow: string -> string) = fun string ->
       "\x1B[1;33m" ^ string ^ "\x1B[0m" 
 
 let (ascii_blue: string -> string) = fun string ->
-       "\x1B[1;34m" ^ string ^ "\x1B[0m" 	
+       "\x1B[1;34m" ^ string ^ "\x1B[0m"  
 
 let (ascii_pink: string -> string) = fun string ->
-       "\x1B[1;35m" ^ string ^ "\x1B[0m" 	
-				 			
+       "\x1B[1;35m" ^ string ^ "\x1B[0m"  
+
 let (ascii_bold: string -> string) = fun string ->
       "\x1B[1m" ^ string ^ "\x1B[0m" 
-				
+
 let (ascii_italic: string -> string) = fun string ->
       "\x1B[3m" ^ string ^ "\x1B[0m" 
 
@@ -133,18 +133,18 @@ let (ascii_underline: string -> string) = fun string ->
 
 let (ascii_strikethrough: string -> string) = fun string ->
       "\x1B[9m" ^ string ^ "\x1B[0m" 
-			     
-			     
+
+
 
 (* LATEX *)
 
 module Latex = 
   (struct 
     let (backslash: string) = "\\"
-	
+  
     let (macro: string -> string list -> string) = fun macro_name args ->
-	  backslash ^ macro_name ^ (String.concat "" (List.map (fun a -> "{"^a^"}") args))
-	    
+    backslash ^ macro_name ^ (String.concat "" (List.map (fun a -> "{"^a^"}") args))
+      
     let (symbol: string -> string) = fun macro_name -> macro macro_name []
 
     let (newline:string) = "\n" ^ backslash ^ backslash    
@@ -166,28 +166,27 @@ let brk str = "{" ^ str ^ "}"
 
 let lst str = "[" ^ str ^ "]"
 
-let (parentheses: string -> string) = fun str -> "(" ^ str ^ ")"							       
-							       
+let (parentheses: string -> string) = fun str -> "(" ^ str ^ ")"
 
 let angle ?format:(format=(!_format_)) : string -> string = fun str ->
       let (l,r) =
-	match format with 
-	| Latex -> Latex.symbol "langle" , Latex.symbol "rangle"
-	| _ -> "<",">"
+  match format with 
+  | Latex -> Latex.symbol "langle" , Latex.symbol "rangle"
+  | _ -> "<",">"
       in l ^ str ^ r
 
 let brace ?format:(format=(!_format_)) : string -> string = fun str ->
       let (l,r) = 
-	match format with 
-	| Latex -> Latex.symbol "{" , Latex.symbol "}"
-	| _ -> "{","}"
+  match format with 
+  | Latex -> Latex.symbol "{" , Latex.symbol "}"
+  | _ -> "{","}"
       in l ^ str ^ r
 
 let bracket ?format:(format=(!_format_)) : string -> string = fun str ->
       let (l,r) = 
-	match format with 
-	| Latex -> Latex.symbol "lg" , Latex.symbol "rg"
-	| _ -> "\"","\""
+  match format with 
+  | Latex -> Latex.symbol "lg" , Latex.symbol "rg"
+  | _ -> "\"","\""
       in l ^ str ^ r
 
 
@@ -213,7 +212,7 @@ let subscript  ?format:(format=(!_format_)) : string -> string = fun string ->
   | Latex -> String.concat "" [ "$_{" ; string ; "}$" ]
   | _ -> "_" ^ string
 
-		 
+
 let supscript ?format:(format=(!_format_)) : string -> string = fun string ->
   match format with
   | Html-> String.concat "" [ "<SUP>" ; string ; "</SUP>" ]
@@ -225,7 +224,7 @@ let math ?format:(format=(!_format_)) : string -> string = fun string ->
   match format with
   | Latex -> Latex.math string
   | _ -> string
-		 
+
 
 (* ENVIRONMENT *)
 
@@ -239,19 +238,19 @@ let blockquote ?format:(format=(!_format_)) : string -> string = fun string ->
 let enumerate ?format:(format=(!_format_)) : string list -> string = fun strings ->
   match format with
   | Html -> 
-	  String.concat "" 
-	    [ "<OL>\n" 
+    String.concat "" 
+      [ "<OL>\n" 
             ; String.concat "" (List.map (fun str -> "<LI>" ^ str ^ "</LI>\n") strings)
-	    ; "</OL>\n"
-	    ] 
+      ; "</OL>\n"
+      ] 
   | Latex ->   
-	  String.concat "" 
-	    [ "\\begin{enumerate}" 
-	    ; String.concat "" (List.map (fun str -> "\n\\item" ^ str ) strings)
-	    ; "\n\\end{enumerate}\n" 
-	    ]
+    String.concat "" 
+      [ "\\begin{enumerate}" 
+      ; String.concat "" (List.map (fun str -> "\n\\item" ^ str ) strings)
+      ; "\n\\end{enumerate}\n" 
+      ]
   | _ -> 
-	  String.concat "\n" strings
+    String.concat "\n" strings
 
 
 (* NEWLINE, SPACES *)
@@ -265,14 +264,14 @@ let newline ?format:(format=(!_format_)) : unit -> string = fun () ->
 
 let space ?format:(format=(!_format_)) : unit -> string = fun () ->
       match format with
-      |	Latex -> "~"
-      |	Html  -> "&nbsp;"
-      |	_ -> " "
+      | Latex -> "~"
+      | Html  -> "&nbsp;"
+      | _ -> " "
 
 let (spaces: int -> string) = fun n ->
       let one_space = space () 
       in make_string n one_space
-	  
+    
 let (tabulation: int -> string) = fun n ->
       (newline ()) ^ (spaces n)
 
@@ -282,25 +281,25 @@ let (tabulation: int -> string) = fun n ->
 module Type = 
   (struct
     let bool ?format:(format=(!_format_)) : bool -> string = fun b ->
-	  let b_as_string = if b then "true" else "false"
-	  in
-	    match format with 
-	    | Latex -> Latex.symbol b_as_string
-	    | _ -> b_as_string
-		      
+    let b_as_string = if b then "true" else "false"
+    in
+      match format with 
+      | Latex -> Latex.symbol b_as_string
+      | _ -> b_as_string
+          
     let (int: int -> string) = string_of_int
 
     let (aligned_integer: int -> int -> string) = fun maxint int ->
-	  let nb_digit = String.length (string_of_int maxint) in
-	    let int_as_string = string_of_int int in
-	      let n = (String.length int_as_string) - nb_digit in
-		(String.make n ' ') ^ int_as_string
-	    
+    let nb_digit = String.length (string_of_int maxint) in
+      let int_as_string = string_of_int int in
+        let n = (String.length int_as_string) - nb_digit in
+    (String.make n ' ') ^ int_as_string
+      
     let (filled_integer: int -> int -> string) = fun maxint int ->
-	  let nb_digit = String.length (string_of_int maxint) in
-	    let int_as_string = string_of_int int in
-	      let n = (String.length int_as_string) - nb_digit in
-		(String.make n '0') ^ int_as_string
+    let nb_digit = String.length (string_of_int maxint) in
+      let int_as_string = string_of_int int in
+        let n = (String.length int_as_string) - nb_digit in
+    (String.make n '0') ^ int_as_string
 
   end)
 
@@ -349,7 +348,7 @@ let _svg_colors = [ ("aliceblue",Light) ; ("antiquewhite",Light) ; ("aqua",Light
 
 let _X11_colors = []
 
-let select_color  ?format:(format=(!_format_)) : int -> string * lumen = fun i -> 
+let select_color  ?format:(format=(!_format_)) : int -> string * lumen = fun i ->
   let select_in = fun colors -> List.nth colors (i mod (List.length colors))
   in
     match format with
@@ -358,37 +357,37 @@ let select_color  ?format:(format=(!_format_)) : int -> string * lumen = fun i -
     | Dot   -> select_in _svg_colors
     | _     -> ("",Light)
 
-let (get_text_color_for_bg: int -> color_name) = fun i -> 
+let (get_text_color_for_bg: int -> color_name) = fun i ->
       match select_color i with
       | (_,Dark)  -> string_in_string "white"
-      |	(_,Light) -> string_in_string "black"
+      | (_,Light) -> string_in_string "black"
 
 let (get_color: int -> color_name) = fun i ->
       string_in_string (fst (select_color i))
 
 let text_color ?format:(format=(!_format_)) : int -> string -> string = fun i text ->
       match format with
-      | Html-> String.concat "" [ "<FONT color=" ; get_color i ; ">" ; text ; "</FONT>" ] 
-      |	Latex -> String.concat "" [ "\\textcolor{" ; get_color i ; "}{" ; text ; "}" ]
-      |	Dot -> String.concat "" [ "[labelcolor=" ; get_color i ; ", label=" ; string_in_string text ; "]" ]
-      |	_ -> text
+      | Html-> String.concat "" [ "<FONT color=" ; get_color i ; ">" ; text ; "</FONT>" ]
+      | Latex -> String.concat "" [ "\\textcolor{" ; get_color i ; "}{" ; text ; "}" ]
+      | Dot -> String.concat "" [ "[labelcolor=" ; get_color i ; ", label=" ; string_in_string text ; "]" ]
+      | _ -> text
 
 let background_color ?format:(format=(!_format_)) : int -> string -> string = fun i text ->
       match format with
       | Html-> String.concat "" [ "<CELL bgcolor=" ; get_color i ; "><FONT color =" ; get_text_color_for_bg i ; ">" ; text ; "</FONT></CELL>" ] 
-      |	Latex -> String.concat "" [ "\\textcolor{" ; get_color i ; "}{" ; text ; "}" ]
-      |	Dot -> String.concat "" [ text ; "[style=filled, fillcolor=" ; get_color i ; ", fontcolor=" ; get_text_color_for_bg i ; "]" ]
-      |	_ -> text
-      
+      | Latex -> String.concat "" [ "\\textcolor{" ; get_color i ; "}{" ; text ; "}" ]
+      | Dot -> String.concat "" [ text ; "[style=filled, fillcolor=" ; get_color i ; ", fontcolor=" ; get_text_color_for_bg i ; "]" ]
+      | _ -> text
+
 
 let (* OLD *) color ?format:(format=(!_format_)) : string -> string -> string = fun color_name text ->
       match format with
       | Html-> String.concat "" [ "<FONT color=" ; color_name ; ">" ; text ; "</FONT>" ] 
-      |	Latex -> String.concat "" [ "\\textcolor{" ; color_name ; "}{" ; text ; "}" ]
-      |	_ -> text
+      | Latex -> String.concat "" [ "\\textcolor{" ; color_name ; "}{" ; text ; "}" ]
+      | _ -> text
 
 
-    
+
 (* to be clean up *)
 
 let error msg = "\n\n ** error:" ^ msg ^ " **\n\n"
