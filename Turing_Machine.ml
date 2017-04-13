@@ -351,18 +351,18 @@ module Turing_Machine =
 	   ]
 	  }
 
-	let (parenthesage_bon : turing_machine) =
+	let (parenthesage_bon : symbols -> turing_machine) = fun symbols ->
       let init = nop.initial and accept = nop.accept and reject = State.reject in
-	      (* let ecrit_ce_quon_lit = Transition.foreach_symbol_of symbols (OUT [O; C])
+	      let ecrit_ce_quon_lit = Transition.foreach_symbol_of symbols (OUT [O; C])
 			    (fun s ->
 				  [ (Q 4, Action(Simultaneous[ RWM(Match(VAL s), No_Write, Right) ; RWM(Match(ANY), No_Write, Here); RWM(Match(VAL B), Write s, Right ) ] ), Q 4) ]
 			    ) 
-			in  *) 	  
+			in  	  
 	  { nop with
 	    nb_bands = 3 ;
 	    name = "parenthesage_bon" ;
 	    transitions =
-	    (* ecrit_ce_quon_lit @  *)
+	    ecrit_ce_quon_lit @ 
 	    [
 	    	(init, Action( Simultaneous [ RWM (Match(VAL O), No_Write, Right) ; RWM (Match(VAL B), Write O, Here); RWM (Match(VAL B), No_Write, Here ) ] ), Q 1);
 	    	(init, Action( Simultaneous [ RWM (Match(BUT O), No_Write, Here) ; RWM (Match(ANY), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), reject);
