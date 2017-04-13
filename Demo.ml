@@ -89,19 +89,27 @@ let (busy_beaver: Turing_Machine.t -> Configuration.t) = fun bb ->
       let cfg = Configuration.make bb [ band ] in
         Execution.log_run cfg 
 
+
+(* 
+  1. [B;Z;U;O;C] -> [O;Z;C;O;C]   BON
+  2. [O;L;X;S;C] -> [O;L;X;S;X;C] BON
+  3. [O;L;X;S]   -> [O;L;X;S;X]   FAUX
+  4. [O;L;X;S;C] -> [C;O;L;X;S;X] FAUX
+ *)
 let (parenthese: unit -> Configuration.t) = fun () ->
-
-      (* 
-        1. [B;Z;U;O;C] -> [O;Z;C;O;C]   BON
-        2. [O;L;X;S;C] -> [O;L;X;S;X;C] BON
-        3. [O;L;X;S]   -> [O;L;X;S;X]   FAUX
-        4. [O;L;X;S;C] -> [C;O;L;X;S;X] FAUX
-       *)
-
       let alphabet = Alphabet.make [O;L;X;S;C] in
       let swap = Turing_Machine.parenthesage_bon alphabet.symbols in
     let band1 = Band.make alphabet [O;L;X;S;X;C] 
     and band2 = Band.make alphabet []
+    and band3 = Band.make alphabet [] in
+      let cfg = Configuration.make swap [ band1 ; band2 ; band3] in
+        Execution.log_run cfg
+
+let (remplace_terme: unit -> Configuration.t) = fun () ->
+      let alphabet = Alphabet.make [O;L;U;Z;X;S;C] in
+      let swap = Turing_Machine.remplace_terme alphabet.symbols in
+    let band1 = Band.make alphabet [X;Z;X] 
+    and band2 = Band.make alphabet [X;D;U;U ]
     and band3 = Band.make alphabet [] in
       let cfg = Configuration.make swap [ band1 ; band2 ; band3] in
         Execution.log_run cfg
@@ -123,6 +131,7 @@ let (demo: unit -> unit) = fun () ->
         gen_swap () ;
         xor () ;
         parenthese();
+        remplace_terme();
         busy_beaver Turing_Machine.bb4
            (* 
         * /!\  TERMINATING BUT EXTREMLY LONG COMPUTATIONS ... The sun will be dead before the end of BB6.
