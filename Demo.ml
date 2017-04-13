@@ -90,9 +90,17 @@ let (busy_beaver: Turing_Machine.t -> Configuration.t) = fun bb ->
         Execution.log_run cfg 
 
 let (parenthese: unit -> Configuration.t) = fun () ->
-      let alphabet = Alphabet.make [B;Z;U;O;C] in
+
+      (* 
+        1. [B;Z;U;O;C] -> [O;Z;C;O;C]   BON
+        2. [O;L;X;S;C] -> [O;L;X;S;X;C] BON
+        3. [O;L;X;S]   -> [O;L;X;S;X]   FAUX
+        4. [O;L;X;S;C] -> [C;O;L;X;S;X] FAUX
+       *)
+
+      let alphabet = Alphabet.make [O;L;X;S;C] in
       let swap = Turing_Machine.parenthesage_bon alphabet.symbols in
-    let band1 = Band.make alphabet [O;Z;C;O;C] 
+    let band1 = Band.make alphabet [O;L;X;S;X;C] 
     and band2 = Band.make alphabet []
     and band3 = Band.make alphabet [] in
       let cfg = Configuration.make swap [ band1 ; band2 ; band3] in
