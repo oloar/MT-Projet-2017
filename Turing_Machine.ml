@@ -352,10 +352,10 @@ module Turing_Machine =
 	  }
 
 	let (parenthesage_bon : symbols -> turing_machine) = fun symbols ->
-      let init = nop.initial and accept = nop.accept and reject = State.reject in
+      let init = nop.initial and accept = nop.accept and reject = nop.reject in
 	      let ecrit_ce_quon_lit = Transition.foreach_symbol_of symbols (OUT [O; C])
 			    (fun s ->
-				  [ (Q 4, Action(Simultaneous[ RWM(Match(VAL s), No_Write, Right) ; RWM(Match(ANY), No_Write, Here); RWM(Match(VAL B), Write s, Right ) ] ), Q 4) ]
+				  [ (Q 4, Action(Simultaneous[ RWM(Match(VAL s), No_Write, Right) ; RWM(Match(BUT D), No_Write, Here); RWM(Match(VAL B), Write s, Right ) ] ), Q 4) ]
 			    ) 
 			in  	  
 	  { nop with
@@ -386,7 +386,7 @@ module Turing_Machine =
 	    	(Q 4, Action( Simultaneous [ RWM (Match(VAL B), No_Write, Here) ; RWM (Match(BUT B), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), reject);
 	    	(Q 4, Action( Simultaneous [ RWM (Match(VAL C), No_Write, Right) ; RWM (Match(VAL O), Write B, Left); RWM (Match(ANY), Write C, Right ) ] ), Q 4);
 	    	(Q 4, Action( Simultaneous [ RWM (Match(VAL O), No_Write, Right) ; RWM (Match(VAL O), No_Write, Right); RWM (Match(ANY), Write O, Right ) ] ), Q 5);
-	    	(Q 4, Action( Simultaneous [ RWM (Match(ANY), No_Write, Here) ; RWM (Match(VAL B), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), accept);
+	    	(Q 4, Action( Simultaneous [ RWM (Match(ANY), No_Write, Here) ; RWM (Match(VAL D), No_Write, Here); RWM (Match(ANY), No_Write, Here ) ] ), accept);
 
 
 	    	(Q 5, Action( Simultaneous [ RWM (Match(ANY), No_Write, Here) ; RWM (Match(VAL B), Write O, Here); RWM (Match(VAL B), No_Write, Here ) ] ), Q 4);
