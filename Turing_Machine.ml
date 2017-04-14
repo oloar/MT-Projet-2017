@@ -389,12 +389,12 @@ module Turing_Machine =
         let init = nop.initial and accept = nop.accept and reject = nop.reject in
             let same_char_band_1_2 = Transition.foreach_symbol_of symbols (VAL X)
                 (fun s ->
-                  [ (init, Action(Simultaneous[ RWM(Match(VAL s), No_Write, Right) ; RWM(Match(VAL s), No_Write, Right); RWM(Match(ANY), No_Write, Here ) ] ), Q 2) ]
+                    [ (init, Action(Simultaneous[ RWM(Match(VAL s), No_Write, Right); RWM(Match(VAL s), No_Write, Right); RWM(Match(ANY), No_Write, Here ) ] ), Q 2);]
                 ) 
             in
             let write_b2_on_b3 = Transition.foreach_symbol_of symbols (BUT B)
                 (fun s ->
-                    [ (Q 3, Action( Simultaneous[ RWM(Match(ANY), No_Write, Here); RWM(Match(VAL s), No_Write, Right); RWM(Match(ANY), Write s, Right)]), Q 3);]
+                    [ (Q 3, Action( Simultaneous[ RWM(Match(ANY),   No_Write, Here ); RWM(Match(VAL s), No_Write, Right); RWM(Match(ANY), Write s, Right)]), Q 3);]
                 )
             in
             let move_b2_left = Transition.foreach_symbol_of symbols (ANY)
@@ -405,9 +405,9 @@ module Turing_Machine =
                     ]
                 )
             in
-            let copy_b1_on_b3 = Transition.foreach_symbol_of symbols (OUT [B; X])
+            let write_b1_on_b3 = Transition.foreach_symbol_of symbols (OUT [B; X])
                 (fun s ->
-                    [(init,  Action(Simultaneous[RWM(Match(VAL s), No_Write, Right); RWM(Match(ANY)  , No_Write, Here); RWM(Match(ANY), Write s , Right)]), init);]
+                    [  (init,  Action(Simultaneous[RWM(Match(VAL s), No_Write, Right); RWM(Match(ANY)  , No_Write, Here); RWM(Match(ANY), Write s , Right)]), init);]
                 )
             in
 
@@ -415,7 +415,7 @@ module Turing_Machine =
         nb_bands = 3 ;
         name = "remplace_terme" ;
         transitions =
-        same_char_band_1_2 @ write_b2_on_b3 @ move_b2_left @ copy_b1_on_b3 @
+        same_char_band_1_2 @ write_b2_on_b3 @ move_b2_left @ write_b1_on_b3 @
         [
             (init, Action(Simultaneous[RWM(Match(VAL B), No_Write, Here); RWM(Match(ANY),   No_Write, Here ); RWM(Match(ANY), No_Write, Here)]), accept);
             (Q 2,  Action(Simultaneous[RWM(Match(ANY),   No_Write, Here); RWM(Match(ANY),   No_Write, Right); RWM(Match(ANY), No_Write, Here)]), Q 3);
@@ -423,5 +423,157 @@ module Turing_Machine =
         ]
     }
 
+
+    let (remplace_lambda_terme : symbols -> turing_machine) = fun symbols ->
+        let init = nop.initial and accept = nop.accept and reject = nop.reject in
+            let write_b1_on_b3 = Transition.foreach_symbol_of symbols (BUT C)
+                (fun s ->
+                    [  (Q 2, Action(Simultaneous[  
+                                                    RWM(Match(VAL s),   Write B,    Left);  (* Band 1 *)
+                                                    RWM(Match(ANY),     No_Write,   Here);  (* Band 2 *)
+                                                    RWM(Match(ANY),     Write s,    Left);  (* Band 3 *)
+                                                    RWM(Match(ANY),     No_Write,   Here)   (* Band 4 *)
+                                                ]), Q 2);]
+                )
+            in
+            let write_b3_on_b4 = Transition.foreach_symbol_of symbols (ANY)
+                (fun s ->
+                    [ 
+(*                         (Q 8, Action( Simultaneous[ 
+                                                    RWM(Match(ANY),     No_Write,   Here);  (* Band 1 *)
+                                                    RWM(Match(ANY),     No_Write,   Here);  (* Band 2 *)
+                                                    RWM(Match(VAL s),   Write B,    Right); (* Band 3 *)
+                                                    RWM(Match(ANY),     Write s,    Right)  (* Band 4 *)
+                                                ]), Q 9); *)
+                        (Q 8, Action( Simultaneous[ 
+                                                    RWM(Match(VAL X),   No_Write,   Right); (* Band 1 *)
+                                                    RWM(Match(ANY),     No_Write,   Here);  (* Band 2 *)
+                                                    RWM(Match(VAL s),   No_Write,   Right); (* Band 3 *)
+                                                    RWM(Match(ANY),     Write s,    Right)  (* Band 4 *)
+                                                ]), Q 9);
+                    ]
+                )
+            in
+            let write_b1_on_b4 = Transition.foreach_symbol_of symbols (OUT [B; X])
+                (fun s ->
+                    [ (Q 8, Action( Simultaneous[ 
+                                                    RWM(Match(VAL s),   No_Write,   Right); (* Band 1 *)
+                                                    RWM(Match(ANY),     No_Write,   Here);  (* Band 2 *)
+                                                    RWM(Match(ANY),     No_Write,   Here);  (* Band 3 *)
+                                                    RWM(Match(ANY),     Write s,    Right)  (* Band 4 *)
+                                                ]), Q 8);]
+                )
+            in
+      { nop with
+        nb_bands = 4 ;
+        name = "remplace_lambda_terme" ;
+        transitions = write_b1_on_b3 @ write_b3_on_b4 @ write_b1_on_b4 @
+        [
+            (init, Action(Simultaneous[
+                                        RWM(Match(BUT B),   No_Write, Right);   (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), init);
+            (init, Action(Simultaneous[
+                                        RWM(Match(VAL B),   No_Write, Left);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 2);
+            (Q 2, Action(Simultaneous[
+                                        RWM(Match(VAL C),   Write B,  Left);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Right);   (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 3);
+            (Q 3, Action(Simultaneous[
+                                        RWM(Match(BUT B),   No_Write, Left);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 3);
+            (Q 3, Action(Simultaneous[
+                                        RWM(Match(VAL B),   No_Write, Right);   (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 4);
+            (Q 4, Action(Simultaneous[
+                                        RWM(Match(VAL O),   Write B,  Right);   (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 5);
+            (Q 4, Action(Simultaneous[
+                                        RWM(Match(BUT O),   No_Write, Here);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), reject);
+            (Q 5, Action(Simultaneous[
+                                        RWM(Match(VAL L),   No_Write, Right);   (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 6);
+            (Q 5, Action(Simultaneous[
+                                        RWM(Match(BUT L),   No_Write, Here);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), reject);
+            (Q 6, Action(Simultaneous[
+                                        RWM(Match(VAL X),   No_Write, Right);   (* Band 1 *)
+                                        RWM(Match(ANY),     Write X,  Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 7);
+            (Q 6, Action(Simultaneous[
+                                        RWM(Match(BUT X),   No_Write, Here);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), reject);
+            (Q 7, Action(Simultaneous[
+                                        RWM(Match(VAL S),   No_Write, Right);   (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 8);
+            (Q 7, Action(Simultaneous[
+                                        RWM(Match(BUT S),   No_Write, Here);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), reject);
+            (Q 8, Action(Simultaneous[
+                                        RWM(Match(VAL B),   No_Write, Right);   (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), accept);
+            (Q 9, Action(Simultaneous[
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(VAL B),   No_Write, Left);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 10);
+            (Q 10, Action(Simultaneous[
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(BUT B),   No_Write, Left);    (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 10);
+            (Q 10, Action(Simultaneous[
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 1 *)
+                                        RWM(Match(ANY),     No_Write, Here);    (* Band 2 *)
+                                        RWM(Match(VAL B),   No_Write, Right);   (* Band 3 *)
+                                        RWM(Match(ANY),     No_Write, Here)     (* Band 4 *)
+                                    ]), Q 8);
+
+
+        ]
+    }
 
   end)

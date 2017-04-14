@@ -109,9 +109,19 @@ let (remplace_terme: unit -> Configuration.t) = fun () ->
       let alphabet = Alphabet.make [O;L;U;Z;X;S;C] in
       let swap = Turing_Machine.remplace_terme alphabet.symbols in
     let band1 = Band.make alphabet [X;Z;X] 
-    and band2 = Band.make alphabet [X;D;U;U ]
+    and band2 = Band.make alphabet [X;D;U;U]
     and band3 = Band.make alphabet [] in
       let cfg = Configuration.make swap [ band1 ; band2 ; band3] in
+        Execution.log_run cfg
+
+let (remplace_lambda_terme: unit -> Configuration.t) = fun () ->
+      let alphabet = Alphabet.make [O;L;U;Z;X;S;C] in
+      let swap = Turing_Machine.remplace_lambda_terme alphabet.symbols in
+    let band1 = Band.make alphabet [O;L;X;S;X;Z;S;X;C;U] 
+    and band2 = Band.make alphabet []
+    and band3 = Band.make alphabet []
+    and band4 = Band.make alphabet [] in
+      let cfg = Configuration.make swap [ band1 ; band2 ; band3 ; band4 ] in
         Execution.log_run cfg
 
 
@@ -132,6 +142,7 @@ let (demo: unit -> unit) = fun () ->
         xor () ;
         parenthese();
         remplace_terme();
+        remplace_lambda_terme();
         busy_beaver Turing_Machine.bb4
            (* 
         * /!\  TERMINATING BUT EXTREMLY LONG COMPUTATIONS ... The sun will be dead before the end of BB6.
