@@ -12,6 +12,8 @@ open Tricks
 (* TYPES *)
     
 type content = string
+type header = content
+type titre = content
 type cell = content
 type cells = content list
 type row = content
@@ -85,6 +87,10 @@ let (environment: string * string * string -> options -> content -> content) = f
 (* table cell: <TD option> content </TD> *)
   
 let (cell: options -> content -> cell) = environment ("  ","TD","")
+
+let (header: options -> content -> header) = environment(" ", "HEAD", "")
+
+let(titre: options -> content -> titre) = environment(" ", "H1", "")
     
 let (wide_cell: int -> int -> cell) = fun width n ->
       if n>0

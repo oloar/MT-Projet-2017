@@ -66,8 +66,16 @@ let (yellow: color) = COL "yellow"
 let (red:    color) = COL "red"
 let (green:  color) = COL "green"
 let (gray:   color) = RGB rgb_gray
-let (orange: color) = RGB rgb_orange
+let (orange: color) = COL "orange"
+let (purple: color) = COL "purple"(*RGB rgb_orange*)
 let (indigo: color) = RGB rgb_indigo
+let (azure: color) = COL "azure"
+let (golden: color) = COL "Goldenrod"
+let (peach: color) = COL "Peach"
+let(melon: color) = COL "Melon"
+let (maroon: color) = COL "Maroon"
+let(sepia: color) = COL "Sepia"
+let(brown: color) = COL "Brown"
 
      
 let (default:color) = black

@@ -65,6 +65,8 @@ module Configuration =
 
     let (to_html: Html.options -> configuration -> Html.table) = fun options cfg ->
       let tm_name = Html.cell [] cfg.tm.name
+
+      and titre = Html.titre [] "etape d'execution"
           
       and bands = Html.cell [] (Band.to_html_many options cfg.bands)
 
@@ -75,9 +77,10 @@ module Configuration =
            else Color.white
          in State.to_html [("bgcolor", Html.Color state_color)] cfg.state
           in
+
         Html.table
           (options @ [ ("bordercolor", Html.Color Color.gray) ; ("cellpadding",Html.Int 0) ; ("cellspacing",Html.Int 0) ; ("border",Html.Int 1) ])
-          [ tm_name ; state ; bands ]
+          [ tm_name; state ; bands ]
           
     (* user *)
 
@@ -116,6 +119,7 @@ open Symbol
 let (demo: unit -> unit) = fun () ->
       let alphabet = Alphabet.make [B;Z;U;D] in
     let band1 = Band.make alphabet [B;D;Z;U;U;Z;B]
+    and titre = Html.titre [] "etape d'execution"
     and band2 = Band.make alphabet [B;B;B;L;B;B;B] in
       let cfg = Configuration.make Turing_Machine.nop [ band1 ; band2 ] in
         begin
