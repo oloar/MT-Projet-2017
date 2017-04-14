@@ -417,11 +417,9 @@ module Turing_Machine =
         transitions =
         same_char_band_1_2 @ write_b2_on_b3 @ move_b2_left @ copy_b1_on_b3 @
         [
-
             (init, Action(Simultaneous[RWM(Match(VAL B), No_Write, Here); RWM(Match(ANY),   No_Write, Here ); RWM(Match(ANY), No_Write, Here)]), accept);
             (Q 2,  Action(Simultaneous[RWM(Match(ANY),   No_Write, Here); RWM(Match(ANY),   No_Write, Right); RWM(Match(ANY), No_Write, Here)]), Q 3);
             (Q 3,  Action(Simultaneous[RWM(Match(ANY),   No_Write, Here); RWM(Match(VAL B), No_Write, Left ); RWM(Match(ANY), No_Write, Here)]), Q 4);
-
         ]
     }
 
